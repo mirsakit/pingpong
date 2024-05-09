@@ -28,18 +28,22 @@ class Line1(GameSprite):
     def update(self):
         keys_pressed = key.get_pressed()
         if keys_pressed[K_w]:
-            self.rect.y -= self.speed_y
+            if self.rect.y>=20:
+                self.rect.y -= self.speed_y
         if keys_pressed[K_s]:
-            self.rect.y += self.speed_y
+            if self.rect.y<=360:
+                self.rect.y += self.speed_y
     
 
 class Line2(GameSprite):
     def update(self):
         keys_pressed = key.get_pressed()
         if keys_pressed[K_UP]:
-            self.rect.y -= self.speed_y
+            if self.rect.y>=20:
+                self.rect.y -= self.speed_y
         if keys_pressed[K_DOWN]:
-            self.rect.y += self.speed_y
+            if self.rect.y<=360:
+                self.rect.y += self.speed_y
 
 class Ball(GameSprite):
     def update(self):
@@ -52,21 +56,28 @@ class Ball(GameSprite):
 
 font1 = font.render('First player won!!', True, (255,255,255))
 font2 = font.render('Second player won!!', True, (255,255,255))
+
  
 line1 = Line1('line.png', 10, 100, 30, 130, 0, 7)
 line2 = Line2('line1.png', 660, 100, 30, 130, 0, 7)
 ball = Ball('ball.png', 300, 100, 50, 50, 4, 4)
 game = True
 finish = False
+score1 = 0
+score2 = 0
+start = timer()
+
 while game:
-    
     for e in event.get():
         keys_pressed = key.get_pressed()
         
         if e.type == QUIT:
             game = False
+        
     if finish != True:
         win.blit(background, (0, 0))
+        font3 = font.render(str(60-(round(timer()-start))), True, (255,255,255))
+        win.blit(font3, (20, 20))
         
         line1.reset()
         line1.update()
@@ -76,11 +87,26 @@ while game:
         ball.update()
 
         if ball.rect.x>730:
-            win.blit(font1, (200, 200))
+            score1+=1
+            score_text = font.render(str(score1)+':'+str(score2), True, (255,255,255))
+            win.blit(score_text, (200, 200))
             finish = True
         if ball.rect.x<-60:
-            win.blit(font2, (200, 200))
+            score2+=1
+            score_text = font.render(str(score1)+':'+str(score2), True, (255,255,255))
+            win.blit(score_text, (200, 200))
             finish = True
+
+        if timer()-start>=60:
+            game = False
+
+    else:
+        keys_pressed = key.get_pressed()
+        if keys_pressed[K_SPACE]:
+            win.blit(background, (0, 0))
+            finish = False
+            ball = Ball('ball.png', 300, 100, 50, 50, 4, 4)
+        
 
     clock.tick(FPS)
     display.update()
