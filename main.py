@@ -60,9 +60,10 @@ font2 = font.render('Second player won!!', True, (255,255,255))
  
 line1 = Line1('line.png', 10, 100, 30, 130, 0, 7)
 line2 = Line2('line1.png', 660, 100, 30, 130, 0, 7)
-ball = Ball('ball.png', 300, 100, 50, 50, 4, 4)
+ball = Ball('ball.png', 300, 100, 50, 50, 5, 5)
 game = True
 finish = False
+finish_1 = False
 score1 = 0
 score2 = 0
 start = timer()
@@ -74,7 +75,7 @@ while game:
         if e.type == QUIT:
             game = False
         
-    if finish != True:
+    if finish != True and finish_1 !=True:
         win.blit(background, (0, 0))
         font3 = font.render(str(60-(round(timer()-start))), True, (255,255,255))
         win.blit(font3, (20, 20))
@@ -98,7 +99,12 @@ while game:
             finish = True
 
         if timer()-start>=60:
-            game = False
+            if score1>score2:
+                win.blit(font1, (200, 200))
+            if score2>score1:
+                win.blit(font2, (200, 200))
+            finish = True
+            finish_1 = True
 
     else:
         keys_pressed = key.get_pressed()
